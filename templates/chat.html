@@ -12,12 +12,12 @@
             {{.UserData.name}}:<br/>
             <textarea></textarea>
             <input type="submit" value="Send" />
+            or <a href="/logout">sign out</a>
         </form>
     </body>
 </html>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js">
-</script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
 <script>
     $(function(){
@@ -30,7 +30,7 @@
                 alert("Error: There is no socket connection.");
                 return false;
             }
-            socket.send(msgBox.val());
+            socket.send(JSON.stringify({"Message": msgBox.val()}));
             msgBox.val("");
             return false;
         });
@@ -44,7 +44,18 @@
             }
             
             socket.onmessage = function(e) {
-                messages.append($("<li>").text(e.data));
+                var msg = JSON.parse(e.data);
+                messages.append(
+                    $("<li>").append(
+                        $("<div>").text(msg.When),
+                        $("<img>").css({
+                            width:50,
+                            verticalAlign:"middle"
+                        }).attr("src", msg.AvatarURL),
+                        $("<strong>").text(msg.Name + ": "),
+                        $("<span>").text(msg.Message),
+                    )
+                );
             }
         }
     });
