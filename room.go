@@ -28,7 +28,7 @@ type room struct {
 	tracer trace.Tracer
 }
 
-func newRoom() *room {
+func newRoom(avatar Avatar) *room {
 	return &room{
 		forward: make(chan *message),
 		join:    make(chan *client),
